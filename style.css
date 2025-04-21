@@ -24,11 +24,11 @@ p {
   margin: 5px;
 }
 
-/* The game board is an 8x8 grid with a decorative gold border */
+/* The game board is an 5x5 grid with a decorative gold border */
 #board {
   display: grid;
-  grid-template-columns: repeat(8, 50px);
-  grid-template-rows: repeat(8, 50px);
+  grid-template-columns: repeat(5, 50px);
+  grid-template-rows: repeat(5, 50px);
   gap: 2px;
   width: 404px;
   height: 404px;
