@@ -1,0 +1,56 @@
+body {
+    font-family: Arial, sans-serif;
+    text-align: center;
+    background-image: url('/images/cyber-warrior.png'); /* Replace with your image */
+    background-size: cover;
+    background-position: center;
+    color: white;
+}
+#board {
+    display: grid;
+    grid-template-columns: repeat(8, 50px);
+    grid-template-rows: repeat(8, 50px);
+    gap: 2px;
+    margin: 20px auto;
+    position: relative;
+    width: 404px;
+    height: 404px;
+    background-color: rgba(0, 0, 0, 0.2);
+}
+.tile {
+    width: 50px;
+    height: 50px;
+    border-radius: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 24px;
+    opacity: 0.8;
+    border: 1px solid white;
+    background-color: rgba(255, 255, 255, 0.5);
+    user-select: none;
+    position: relative;
+}
+.tile.matched {
+    animation: fade-out 1s ease-out;
+    background-color: transparent !important;
+}
+@keyframes fade-out {
+    0% { opacity: 1; }
+    100% { opacity: 0; }
+}
+.sparkle {
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    background-color: gold;
+    border-radius: 50%;
+    pointer-events: none;
+    animation: sparkle 0.5s ease-out;
+}
+@keyframes sparkle {
+    0% { transform: scale(1); opacity: 1; }
+    50% { transform: scale(1.5); opacity: 0.5; }
+    100% { transform: scale(1); opacity: 0; }
+}
