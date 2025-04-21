@@ -7,14 +7,18 @@
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <h1>Match-3 Game</h1>
-  <!-- Score and level status -->
-  <p>
-    Level: <span id="level">1</span> &nbsp;|&nbsp;
-    Score: <span id="score">0</span> / Target: <span id="target-score">50</span>
-  </p>
-  <!-- Game board -->
+  <header>
+    <h1>Match-3 Game</h1>
+    <div id="score-board">
+      <span>Level: <span id="level">1</span></span> |
+      <span>Score: <span id="score">0</span></span> |
+      <span>Target: <span id="target-score">50</span></span>
+    </div>
+  </header>
   <div id="board"></div>
+  <div id="countdown-container" style="display: none;">
+    <p>Next level in <span id="countdown">7</span> seconds...</p>
+  </div>
   <p id="status"></p>
   <script src="script.js"></script>
 </body>

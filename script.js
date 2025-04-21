@@ -1,40 +1,43 @@
-// DOM element references
+// Get DOM elements
 const board = document.getElementById("board");
 const levelDisplay = document.getElementById("level");
 const scoreDisplay = document.getElementById("score");
 const targetScoreDisplay = document.getElementById("target-score");
 const statusDisplay = document.getElementById("status");
+const countdownContainer = document.getElementById("countdown-container");
+const countdownDisplay = document.getElementById("countdown");
 
-// Game settings and variables
-const gridSize = 8;
-let tiles = [];        // Holds tile DOM elements
+// Game settings
+const gridSize = 5;
+let tiles = [];
 let score = 0;
 let level = 1;
 const totalLevels = 5;
 const colors = ["red", "blue", "green", "yellow", "purple"];
-// Level targets: Level 1: 50; then increases by 5 per level
+// Level targets: Level 1 = 50, and each level increases by 5 points.
 const levelTargets = [50, 55, 60, 65, 70];
-let selectedTile = null;  // Index of the tile being dragged
 
-// Create the game board
+let selectedTile = null; // The tile index being dragged
+
+// Create the board
 function createBoard() {
   tiles = [];
   board.innerHTML = "";
+  // Reset score for this level
   score = 0;
   scoreDisplay.textContent = score;
   targetScoreDisplay.textContent = levelTargets[level - 1];
   statusDisplay.textContent = "";
 
-  // Create an 8x8 grid
+  // Create gridSize x gridSize board
   for (let i = 0; i < gridSize * gridSize; i++) {
     const tile = document.createElement("div");
     tile.classList.add("tile");
-    // Randomly assign a color index
+    // Random color type (an index into the colors array)
     const randIndex = Math.floor(Math.random() * colors.length);
     tile.dataset.type = randIndex;
     tile.style.backgroundColor = colors[randIndex];
     tile.draggable = true;
-    // Drag events for swapping
     tile.addEventListener("dragstart", (event) => dragStart(event, i));
     tile.addEventListener("dragover", (event) => event.preventDefault());
     tile.addEventListener("drop", (event) => dragDrop(event, i));
@@ -43,18 +46,18 @@ function createBoard() {
   }
 }
 
-// Save the starting tile index when dragging begins.
+// Drag start handler
 function dragStart(event, index) {
   selectedTile = index;
 }
 
-// When dropping on a tile, if it’s a neighbor, swap and check for matches.
+// Drag drop handler – swaps with neighbor if valid
 function dragDrop(event, targetIndex) {
   if (isNeighbor(selectedTile, targetIndex)) {
     swapTiles(selectedTile, targetIndex);
-    // Check for matches after the swap
+    // Check for matches after swap
     if (checkMatches()) {
-      // Wait for animations to finish before applying gravity
+      // Allow animations to complete, then apply gravity
       setTimeout(applyGravity, 1100);
     }
     updateScoreDisplay();
@@ -62,7 +65,7 @@ function dragDrop(event, targetIndex) {
   }
 }
 
-// Returns true if two tile indices are direct neighbors.
+// Verify if two tile indices are neighbors (adjacent horizontally or vertically)
 function isNeighbor(index1, index2) {
   const row1 = Math.floor(index1 / gridSize);
   const col1 = index1 % gridSize;
@@ -71,7 +74,7 @@ function isNeighbor(index1, index2) {
   return (Math.abs(row1 - row2) + Math.abs(col1 - col2)) === 1;
 }
 
-// Swap the "type" and the displayed background color between two tiles.
+// Swap two tiles (by swapping their type and displayed background)
 function swapTiles(index1, index2) {
   [tiles[index1].dataset.type, tiles[index2].dataset.type] =
     [tiles[index2].dataset.type, tiles[index1].dataset.type];
@@ -79,13 +82,12 @@ function swapTiles(index1, index2) {
     [tiles[index2].style.backgroundColor, tiles[index1].style.backgroundColor];
 }
 
-// Check for horizontal and vertical matches across the board.
-// Returns true if at least one match is found.
+// Check for horizontal and vertical matches (3 or more contiguous tiles)
 function checkMatches() {
   let matchFound = false;
   for (let i = 0; i < tiles.length; i++) {
     const type = tiles[i].dataset.type;
-    if (type === "") continue; // Skip empty spaces
+    if (type === "") continue; // Skip empty tiles
     const horizMatches = findMatches(i, type, "horizontal");
     const vertMatches = findMatches(i, type, "vertical");
     if (horizMatches.length >= 3) {
@@ -100,32 +102,32 @@ function checkMatches() {
   return matchFound;
 }
 
-// Look for contiguous tiles that match in the given direction.
+// Find contiguous matching tiles in one direction
 function findMatches(index, type, direction) {
   let matches = [index];
   const row = Math.floor(index / gridSize);
   const col = index % gridSize;
   if (direction === "horizontal") {
-    // Check left side
+    // Check left
     for (let c = col - 1; c >= 0; c--) {
       const idx = row * gridSize + c;
       if (tiles[idx].dataset.type === type) matches.push(idx);
       else break;
     }
-    // Check right side
+    // Check right
     for (let c = col + 1; c < gridSize; c++) {
       const idx = row * gridSize + c;
       if (tiles[idx].dataset.type === type) matches.push(idx);
       else break;
     }
   } else if (direction === "vertical") {
-    // Check upward
+    // Check up
     for (let r = row - 1; r >= 0; r--) {
       const idx = r * gridSize + col;
       if (tiles[idx].dataset.type === type) matches.push(idx);
       else break;
     }
-    // Check downward
+    // Check down
     for (let r = row + 1; r < gridSize; r++) {
       const idx = r * gridSize + col;
       if (tiles[idx].dataset.type === type) matches.push(idx);
@@ -135,14 +137,13 @@ function findMatches(index, type, direction) {
   return matches;
 }
 
-// Mark a tile as matched by adding animations, sparkles, and updating the score.
+// Mark a tile as matched: add sparkle effect, trigger fade-out, and update score.
 function markTileMatched(index) {
   const tile = tiles[index];
   if (!tile.classList.contains("matched")) {
     createSparkleEffect(tile);
     tile.classList.add("matched");
-    score += 10; // 10 points per tile
-    // After the animation, clear the tile (set to empty/transparent)
+    score += 10; // Each matched tile gives 10 points.
     setTimeout(() => {
       tile.dataset.type = "";
       tile.style.backgroundColor = "transparent";
@@ -150,7 +151,7 @@ function markTileMatched(index) {
   }
 }
 
-// Create a sparkle effect inside a tile.
+// Create a sparkle effect on a tile
 function createSparkleEffect(tile) {
   for (let i = 0; i < 5; i++) {
     const sparkle = document.createElement("div");
@@ -162,15 +163,13 @@ function createSparkleEffect(tile) {
   }
 }
 
-// Let the tiles "fall" (gravity): tiles above an empty space drop down,
-// and empty spaces at the top are then filled with new random tiles.
+// Apply gravity: Let tiles fall down into empty spaces; generate new tiles at the top.
 function applyGravity() {
   let moved = false;
   for (let col = 0; col < gridSize; col++) {
     for (let row = gridSize - 1; row > 0; row--) {
       const index = row * gridSize + col;
       if (tiles[index].dataset.type === "") {
-        // Look upward for a non-empty tile
         for (let r = row - 1; r >= 0; r--) {
           const aboveIdx = r * gridSize + col;
           if (tiles[aboveIdx].dataset.type !== "") {
@@ -181,7 +180,7 @@ function applyGravity() {
         }
       }
     }
-    // If the top tile is empty, generate a new random tile.
+    // For the top row, if empty, generate a new random tile.
     const topIndex = col;
     if (tiles[topIndex].dataset.type === "") {
       const randIndex = Math.floor(Math.random() * colors.length);
@@ -193,29 +192,44 @@ function applyGravity() {
   if (moved) {
     setTimeout(applyGravity, 100);
   } else {
-    // Check if new matches have cascaded.
+    // After gravity, check for cascaded matches.
     if (checkMatches()) {
       setTimeout(applyGravity, 1100);
     }
   }
 }
 
-// Update the score display.
+// Update the on-screen score.
 function updateScoreDisplay() {
   scoreDisplay.textContent = score;
 }
 
-// Check if the level target has been reached. If so, clear the board and advance
-// to the next level (after a 7‑second delay). Also, the score is reset for each level.
+// Check if the current level’s target score has been reached.
 function updateLevelStatus() {
   if (score >= levelTargets[level - 1]) {
     statusDisplay.textContent = `Level ${level} Complete!`;
-    board.innerHTML = "";  // Clear board visuals
-    setTimeout(nextLevel, 7000);
+    board.innerHTML = "";  // Clear the board visually.
+    showCountdownAndNextLevel();
   }
 }
 
-// Move to the next level. If all levels are finished, show a game-complete message.
+// Show a 7-second countdown until the next level.
+function showCountdownAndNextLevel() {
+  let countdown = 7;
+  countdownContainer.style.display = "block";
+  countdownDisplay.textContent = countdown;
+  const interval = setInterval(() => {
+    countdown--;
+    countdownDisplay.textContent = countdown;
+    if (countdown <= 0) {
+      clearInterval(interval);
+      countdownContainer.style.display = "none";
+      nextLevel();
+    }
+  }, 1000);
+}
+
+// Advance to the next level; if all levels are complete, end the game.
 function nextLevel() {
   level++;
   if (level > totalLevels) {
@@ -227,5 +241,5 @@ function nextLevel() {
   }
 }
 
-// Initialize the game
+// Start the game
 createBoard();

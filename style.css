@@ -1,81 +1,77 @@
-/* Center everything on a full‑screen background */
+/* Basic reset and centering */
 body {
   margin: 0;
   padding: 0;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-  justify-content: center;
   align-items: center;
-  background-image: url("YOUR_BACKGROUND_IMAGE_URL_HERE"); /* Replace with your image URL */
+  justify-content: center;
+  background-image: url("YOUR_BACKGROUND_IMAGE_URL_HERE"); /* Replace with your background image URL */
   background-size: cover;
   background-position: center;
   font-family: Arial, sans-serif;
-  color: white;
+  color: #fff;
   text-align: center;
 }
 
-h1 {
-  margin: 10px;
+header {
+  margin-bottom: 10px;
 }
 
-p {
+#score-board {
   font-size: 1.2em;
-  margin: 5px;
+  margin-bottom: 10px;
 }
 
-/* The game board is an 5x5 grid with a decorative gold border */
+/* The game board: a 5x5 grid with an artistic border */
 #board {
   display: grid;
-  grid-template-columns: repeat(5, 50px);
-  grid-template-rows: repeat(5, 50px);
-  gap: 2px;
-  width: 404px;
-  height: 404px;
-  background-color: rgba(0, 0, 0, 0.2);
-  border: 10px solid gold;
-  border-radius: 15px;
+  grid-template-columns: repeat(5, 60px);
+  grid-template-rows: repeat(5, 60px);
+  gap: 4px;
+  background: rgba(0, 0, 0, 0.2);
+  padding: 10px;
+  border: 5px solid #DAA520; /* gold border */
+  border-radius: 10px;
   box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
-  position: relative;
 }
 
-/* Basic tile styling – these represent our colorful “candies” */
+/* Each tile – these are our "candies" */
 .tile {
-  width: 50px;
-  height: 50px;
-  border-radius: 5px;
+  width: 60px;
+  height: 60px;
+  border-radius: 8px;
   cursor: pointer;
   user-select: none;
   position: relative;
-  /* For a candy look, you can use solid bright colors or even gradients */
-  background-color: #ccc;
-  transition: background-color 0.3s ease;
+  transition: background-color 0.3s ease, opacity 1s ease;
+  /* Default background added via JavaScript */
 }
 
-/* When a tile is matched, apply a fade-out animation */
+/* When a tile is matched, fade it out */
 .tile.matched {
   animation: fadeOut 1s forwards;
 }
 
-/* Fade-out keyframes for matched tiles */
+/* Fade-out animation */
 @keyframes fadeOut {
-  0% { opacity: 1; }
-  100% { opacity: 0; }
+  from { opacity: 1; }
+  to   { opacity: 0; }
 }
 
-/* Sparkle effect style */
+/* Sparkle effect */
 .sparkle {
   position: absolute;
-  width: 10px;
-  height: 10px;
-  background-color: gold;
+  width: 12px;
+  height: 12px;
+  background: gold;
   border-radius: 50%;
   pointer-events: none;
-  animation: sparkle 0.5s ease-out forwards;
+  animation: sparkleAnim 0.5s ease-out forwards;
 }
 
-/* Sparkle keyframes: scales up then fades out */
-@keyframes sparkle {
+@keyframes sparkleAnim {
   0% {
     transform: scale(1);
     opacity: 1;
@@ -88,4 +84,11 @@ p {
     transform: scale(1);
     opacity: 0;
   }
+}
+
+/* Countdown container styling */
+#countdown-container {
+  margin-top: 15px;
+  font-size: 1.5em;
+  color: #FFA500; /* orange */
 }
