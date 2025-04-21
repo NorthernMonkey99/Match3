@@ -143,7 +143,7 @@ function markTileMatched(index) {
   if (!tile.classList.contains("matched")) {
     createSparkleEffect(tile);
     tile.classList.add("matched");
-    score += 10; // Each matched tile gives 10 points.
+    score += 3; // Each matched tile gives 3 points.
     setTimeout(() => {
       tile.dataset.type = "";
       tile.style.backgroundColor = "transparent";
