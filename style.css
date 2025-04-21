@@ -1,4 +1,4 @@
-/* Center the background image and contents */
+/* Center everything on a full‑screen background */
 body {
   margin: 0;
   padding: 0;
@@ -7,7 +7,7 @@ body {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  background-image: url("/images/cyber-warrior.png"); /* Replace with your image URL */
+  background-image: url("YOUR_BACKGROUND_IMAGE_URL_HERE"); /* Replace with your image URL */
   background-size: cover;
   background-position: center;
   font-family: Arial, sans-serif;
@@ -15,16 +15,16 @@ body {
   text-align: center;
 }
 
-/* Header and score styling */
 h1 {
-  margin-bottom: 10px;
+  margin: 10px;
 }
 
 p {
   font-size: 1.2em;
+  margin: 5px;
 }
 
-/* Board styling: 8x8 grid with an artistic border */
+/* The game board is an 8x8 grid with a decorative gold border */
 #board {
   display: grid;
   grid-template-columns: repeat(8, 50px);
@@ -33,43 +33,37 @@ p {
   width: 404px;
   height: 404px;
   background-color: rgba(0, 0, 0, 0.2);
-  border: 10px solid gold; /* Artistic border */
+  border: 10px solid gold;
   border-radius: 15px;
   box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
   position: relative;
 }
 
-/* Tile style */
+/* Basic tile styling – these represent our colorful “candies” */
 .tile {
   width: 50px;
   height: 50px;
   border-radius: 5px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
   cursor: pointer;
   user-select: none;
   position: relative;
+  /* For a candy look, you can use solid bright colors or even gradients */
   background-color: #ccc;
   transition: background-color 0.3s ease;
 }
 
-/* When matched, animate fade-out */
+/* When a tile is matched, apply a fade-out animation */
 .tile.matched {
   animation: fadeOut 1s forwards;
 }
 
 /* Fade-out keyframes for matched tiles */
 @keyframes fadeOut {
-  0% {
-    opacity: 1;
-  }
-  100% {
-    opacity: 0;
-  }
+  0% { opacity: 1; }
+  100% { opacity: 0; }
 }
 
-/* Sparkle effect styling */
+/* Sparkle effect style */
 .sparkle {
   position: absolute;
   width: 10px;
@@ -80,7 +74,7 @@ p {
   animation: sparkle 0.5s ease-out forwards;
 }
 
-/* Sparkle keyframes */
+/* Sparkle keyframes: scales up then fades out */
 @keyframes sparkle {
   0% {
     transform: scale(1);
